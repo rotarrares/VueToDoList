@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon @click="drawer = !drawer">
+      <v-app-bar-nav-icon @click="drawerValue = !drawerValue">
         <v-icon v-show="!drawerValue">mdi-menu</v-icon>
         <v-icon v-show="drawerValue">mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
