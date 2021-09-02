@@ -4,13 +4,13 @@
       <!-- v-model="group" -->
       <v-list-item-group active-class="deep-purple--text text--accent-4">
 
-        <v-list-item link to="/Today">
+        <v-list-item link to="/">
           <v-list-item-icon>
             <v-icon large>mdi-calendar-today</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Today</v-list-item-title>
         </v-list-item>
-        <v-list-item link to="/">
+        <v-list-item link to="/Upcoming">
           <v-list-item-icon>
             <v-icon large>mdi-calendar</v-icon>
           </v-list-item-icon>
