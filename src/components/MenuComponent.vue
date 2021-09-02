@@ -3,7 +3,6 @@
     <v-list nav dense>
       <!-- v-model="group" -->
       <v-list-item-group active-class="deep-purple--text text--accent-4">
-
         <v-list-item link to="/">
           <v-list-item-icon>
             <v-icon large>mdi-calendar-today</v-icon>
