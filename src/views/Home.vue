@@ -44,16 +44,19 @@
             v-model="value"
             :weekdays="weekday"
             :type="type"
-            :events="events"
+            :events="getEvents"
             :event-overlap-mode="mode"
             :event-overlap-threshold="30"
             :event-color="getEventColor"
-            @change="() => getEvents"
+            @change="setEvents"
             @click:event="clickEvent"
+            @click:day="clickDay"
+            @click:date="clickDate"
           ></v-calendar>
         </v-sheet>
 
         <add-task-component
+          :show-button="false"
           :id="currentlyEditedTaskId"
           :date="new Date(value)"
           @clearId="currentlyEditedTaskId = ''"
@@ -69,8 +72,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import AddTaskComponent from "@/components/AddTaskComponent.vue";
 import { Task } from "@/store";
-import { CalendarEvent } from "vuetify";
-
+import { CalendarEvent, CalendarTimestamp } from "vuetify";
+import router from "@/router";
 @Component({
   name: "Home",
   components: {
@@ -80,6 +83,7 @@ import { CalendarEvent } from "vuetify";
 export default class Home extends Vue {
   type = "month";
   currentlyEditedTaskId = "";
+  events = Array<CalendarEvent>();
   types = ["month", "week", "day", "4day"];
   mode = "stack";
   modes = ["stack", "column"];
@@ -90,13 +94,22 @@ export default class Home extends Vue {
     { text: "Mon - Fri", value: [1, 2, 3, 4, 5] },
     { text: "Mon, Wed, Fri", value: [1, 3, 5] },
   ];
-  value = "";
-  events = Array<unknown>();
+  value = Date().toString();
   setDialog = function (value: boolean): void {
     if (value) {
       //nothing
     }
   };
+
+  clickDay(e: CalendarTimestamp): void {
+    this.value = e.date;
+    this.setDialog(true);
+  }
+
+  clickDate(e: CalendarTimestamp): void {
+    router.push({ path: "/day/" + e.date, params: { date: e.date } });
+  }
+
   clickEvent({ event }: CalendarEvent): void {
     this.currentlyEditedTaskId = event.id;
     this.setDialog(true);
@@ -104,7 +117,7 @@ export default class Home extends Vue {
 
   get getEvents(): Array<CalendarEvent> {
     const events = Array<CalendarEvent>();
-    const tasks = this.$store.getters.getAllTasks;
+    const tasks = this.$store.state.tasks;
     tasks.forEach((task: Task) => {
       events.push({
         id: task.id,
@@ -116,19 +129,29 @@ export default class Home extends Vue {
       });
     });
     this.events = events;
-    return events;
+    return this.events;
+  }
+  setEvents(): void {
+    const events = Array<CalendarEvent>();
+    const tasks = this.$store.state.tasks;
+    tasks.forEach((task: Task) => {
+      events.push({
+        id: task.id,
+        name: task.name,
+        start: new Date(task.date),
+        end: new Date(new Date(task.date).getTime() + 10000),
+        color: task.color,
+        timed: false,
+      });
+    });
+    this.events = events;
   }
 
   getEventColor(event: CalendarEvent): string {
     return event.color;
   }
+  rnd(a: number, b: number): number {
+    return Math.floor((b - a + 1) * Math.random()) + a;
+  }
 }
-/*export interface CalendarEvent {
-  id?: string;
-  name: string;
-  start: Date;
-  end: Date;
-  color: string;
-  timed: boolean;
-}*/
 </script>

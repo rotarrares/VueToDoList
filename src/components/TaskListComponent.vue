@@ -7,7 +7,7 @@
           inactive
           three-line
           :key="task.id"
-          v-for="task in $store.getters.getTodayTasks"
+          v-for="task in $store.getters.getDayTasks(selectedDate)"
         >
           <v-list-item-icon>
             <v-checkbox
@@ -34,11 +34,16 @@
 <script lang="ts">
 import Component from "vue-class-component";
 import Vue from "vue";
+import { Prop } from "vue-property-decorator";
 
 @Component({
   name: "TaskListComponent",
 })
 export default class TaskListComponent extends Vue {
+  @Prop({ type: [String, Number], required: true }) selectedDate?:
+    | string
+    | number;
+
   deleteListItem(id: string): void {
     this.$store.dispatch("deleteTask", id);
   }

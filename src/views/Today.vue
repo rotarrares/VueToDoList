@@ -1,8 +1,11 @@
 <template>
   <div class="about">
-    <h1>Today</h1>
-    <add-task-component :date="new Date(Date.now())"></add-task-component>
-    <task-list-component></task-list-component>
+    <h1>{{ selectedDate }}</h1>
+    <add-task-component
+      :show-button="true"
+      :date="new Date(selectedDate)"
+    ></add-task-component>
+    <task-list-component :selected-date="selectedDate"></task-list-component>
   </div>
 </template>
 
@@ -16,5 +19,9 @@ import TaskListComponent from "@/components/TaskListComponent.vue";
   name: "Today",
   components: { TaskListComponent, AddTaskComponent },
 })
-export default class Today extends Vue {}
+export default class Today extends Vue {
+  selectedDate?: string | number = this.$route.params.date
+    ? this.$route.params.date
+    : new Date().toDateString();
+}
 </script>

@@ -5,12 +5,21 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/Upcoming",
+    path: "/",
     name: "Home",
     component: Home,
   },
   {
-    path: "/",
+    path: "/day",
+    name: "Today",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Today.vue"),
+  },
+  {
+    path: "/day/:date",
     name: "Today",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
