@@ -1,17 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import VuexPersistence from "vuex-persist";
-import guidGenerator from "../utils/functions";
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
 });
 
-interface Task {
+export interface Task {
   id: string;
   name: string;
   description?: string;
   completed: boolean;
+  date: Date;
+  color: string;
 }
 
 export default new Vuex.Store({
@@ -22,13 +23,12 @@ export default new Vuex.Store({
     addTask(state, payload): void {
       state.tasks.push(payload);
     },
+
     checkTask(state, payload): void {
-      state.tasks.every((task) => {
+      state.tasks.forEach((task) => {
         if (task.id === payload) {
           task.completed = !task.completed;
-          return false;
         }
-        return true;
       });
     },
     deleteTask(state, payload): void {
@@ -40,8 +40,6 @@ export default new Vuex.Store({
   },
   actions: {
     addTask(context, payload): void {
-      payload["completed"] = false;
-      payload["id"] = guidGenerator();
       context.commit("addTask", payload);
     },
     checkTask(context, payload): void {
@@ -53,7 +51,22 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
-    getTasks: (state) => state.tasks.sort((x,y)=>( (x.completed === y.completed)? 0 : x.completed? -1 : 1)),
+    getAllTasks: (state) =>
+      state.tasks.sort((x, y) =>
+        x.completed === y.completed ? 0 : x.completed ? -1 : 1
+      ),
+    getTaskById:
+      (state) =>
+      (id: string): Task | undefined =>
+        state.tasks.find((task) => task.id === id),
+    getTodayTasks: (state) =>
+      state.tasks.filter(
+        (task) =>
+          new Date(task.date).getDate() === new Date(Date.now()).getDate() &&
+          new Date(task.date).getMonth() === new Date(Date.now()).getMonth() &&
+          new Date(task.date).getFullYear() ===
+            new Date(Date.now()).getFullYear()
+      ),
   },
   plugins: [vuexLocal.plugin],
 });

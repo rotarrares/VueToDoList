@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app v-model="drawer" absolute bottom>
+  <v-navigation-drawer absolute temporary app v-model="drawer">
     <v-list nav dense>
       <!-- v-model="group" -->
       <v-list-item-group active-class="deep-purple--text text--accent-4">
@@ -23,13 +23,17 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { Model } from "vue-property-decorator";
 
 @Component({
   name: "MenuComponent",
 })
 export default class MenuComponent extends Vue {
-  hideOverlay = true;
-  @Model("drawer", { type: Boolean }) drawer?: boolean = true;
+  drawer?: boolean = false;
+  toggleDrawer(): void {
+    this.drawer = !this.drawer;
+  }
+  created(): void {
+    this.$emit("toggleDrawer", this.toggleDrawer);
+  }
 }
 </script>

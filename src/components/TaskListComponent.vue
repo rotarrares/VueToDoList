@@ -7,12 +7,12 @@
           inactive
           three-line
           :key="task.id"
-          v-for="task in $store.getters.getTasks"
+          v-for="task in $store.getters.getTodayTasks"
         >
           <v-list-item-icon>
             <v-checkbox
               :input-value="task.completed"
-              color="green"
+              :color="task.color"
             ></v-checkbox>
           </v-list-item-icon>
           <v-list-item-content align="left">
@@ -22,7 +22,7 @@
           <v-list-item-action v-show="task.completed">
             <v-list-item-action-text>Remove</v-list-item-action-text>
             <v-btn large color="red" icon @click="deleteListItem(task.id)">
-              <v-icon>mdi-delete</v-icon>
+              <v-icon>mdi-close-box-outline</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
