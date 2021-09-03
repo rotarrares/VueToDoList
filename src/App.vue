@@ -1,14 +1,11 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon @click="drawerValue = !drawerValue">
-        <v-icon v-show="!drawerValue">mdi-menu</v-icon>
-        <v-icon v-show="drawerValue">mdi-arrow-left</v-icon>
+      <v-app-bar-nav-icon @click="toggleDrawer">
+        <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
-    <menu-component
-      :drawer="drawerValue"
-    />
+    <menu-component @toggleDrawer="toggleDrawer = $event" />
     <v-main>
       <v-container fluid>
         <router-view />
@@ -27,18 +24,10 @@ import MenuComponent from "@/components/MenuComponent.vue";
   components: {
     MenuComponent,
   },
-  computed: {
-    drawerValue: {
-      get: function () {
-        return this.drawer;
-      },
-      set: function (value) {
-        this.drawer = value;
-      },
-    },
-  },
 })
 export default class App extends Vue {
-  drawer?: boolean = true;
+  toggleDrawer? = function (): void {
+    //Something off
+  };
 }
 </script>

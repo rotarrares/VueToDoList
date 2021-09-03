@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <h1>Today</h1>
-    <add-task-component></add-task-component>
+    <add-task-component :date="new Date(Date.now())"></add-task-component>
     <task-list-component></task-list-component>
   </div>
 </template>
@@ -16,6 +16,5 @@ import TaskListComponent from "@/components/TaskListComponent.vue";
   name: "Today",
   components: { TaskListComponent, AddTaskComponent },
 })
-export default class Today extends Vue {
-}
+export default class Today extends Vue {}
 </script>
