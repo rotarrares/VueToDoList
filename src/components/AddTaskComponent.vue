@@ -1,7 +1,13 @@
 <template>
   <v-dialog v-model="dialog" width="500">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+      <v-btn
+        v-show="$props.showButton"
+        color="red lighten-2"
+        dark
+        v-bind="attrs"
+        v-on="on"
+      >
         <v-icon>mdi-plus</v-icon>
         Add Task
       </v-btn>
@@ -29,11 +35,16 @@
               <v-icon :color="data.item">mdi-flag</v-icon>{{ data.item }}
             </template>
           </v-select>
+        </v-form>
+        <v-card-actions>
           <v-btn :disabled="!valid" color="success" @click="submit">
             <v-icon v-show="$props.id === ''">mdi-plus</v-icon>
             {{ $props.id === "" ? "Add" : "Edit" }}</v-btn
           >
-        </v-form>
+          <v-btn color="red" @click="deleteEvent()" v-show="$props.id !== ''">
+            Delete
+          </v-btn>
+        </v-card-actions>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -55,6 +66,7 @@ import guidGenerator from "@/utils/functions";
 export default class AddTaskComponent extends Vue {
   @Prop({ type: Date, required: true }) date?: Date;
   @Prop({ type: String, default: "", required: false }) id?: string;
+  @Prop({ type: Boolean, default: true, required: false }) showButton?: boolean;
   dialog = false;
   selectedColor = "grey darken-1";
   valid = true;
@@ -72,8 +84,13 @@ export default class AddTaskComponent extends Vue {
     }
   }
 
-  mounted(): void {
+  created(): void {
     this.$emit("setDialog", this.setDialog);
+  }
+
+  @Watch("date")
+  onDateChanged(): void {
+    this.taskDate = this.$props.date;
   }
 
   @Watch("id")
@@ -104,12 +121,17 @@ export default class AddTaskComponent extends Vue {
     "grey darken-1",
   ];
 
+  deleteEvent(): void {
+    this.$store.dispatch("deleteTask", this.$props.id);
+    this.setDialog(false);
+  }
+
   setDialog(value: boolean): void {
     this.dialog = value;
   }
 
   submit(): void {
-    this.$store.dispatch("addTask", {
+    this.$store.dispatch(this.$props.id === "" ? "addTask" : "editTask", {
       id: this.$props.id === "" ? guidGenerator() : this.$props.id,
       name: this.taskName,
       description: this.taskDescription,
