@@ -54,7 +54,6 @@
         </v-sheet>
 
         <add-task-component
-          @
           :id="currentlyEditedTaskId"
           :date="new Date(value)"
           @clearId="currentlyEditedTaskId = ''"
@@ -122,9 +121,6 @@ export default class Home extends Vue {
 
   getEventColor(event: CalendarEvent): string {
     return event.color;
-  }
-  rnd(a: number, b: number): number {
-    return Math.floor((b - a + 1) * Math.random()) + a;
   }
 }
 /*export interface CalendarEvent {
